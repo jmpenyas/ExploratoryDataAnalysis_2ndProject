@@ -12,23 +12,26 @@ unzip(
 # Reading and loading on a dataset the emission file
 # classCodes = readRDS("Source_Classification_Code.rds")
 summaryPM25 = readRDS("summarySCC_PM25.rds")
-# Aggregating it by year and storing in new dataset
-totalByYear = aggregate(summaryPM25$Emissions,by=list(summaryPM25$year),FUN = sum, na.rm=T)
+# Subsetting for Baltimore
+baltimore = subset(summaryPM25, fips == "24510")
 rm(summaryPM25)
+# Aggregating it by year and storing in new dataset
+totalByYear = aggregate(baltimore$Emissions,by=list(baltimore$year),FUN = sum, na.rm=T)
+rm(baltimore)
 # Adding column names
 names(totalByYear) = c("Year","Total.Emissions")
 # Generating the plot
 barplot(
         totalByYear$Total.Emissions,
         names.arg=totalByYear$Year,
-        col = "red",
+        col = "cyan",
         ylab = "PM2.5 Total Emissions",
         xlab = "Years",
-        main = "PM2.5 Evolution 1999-2008"
+        main = "Baltimore(MD) PM2.5 Evolution 1999-2008"
 )
 # Copying the result to the Png device and saving it
 dev.copy(png,
-         "plot1.png",
+         "plot2.png",
          width = 480,
          height = 480,
          units = "px")
